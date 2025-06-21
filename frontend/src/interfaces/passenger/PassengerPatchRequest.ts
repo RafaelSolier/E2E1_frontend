@@ -1,1 +1,5 @@
-export interface PassengerPatchRequest {}
+export interface PassengerPatchRequest {
+    firstName: string;
+    lastName: string;
+    phoneNumber: string;
+}
