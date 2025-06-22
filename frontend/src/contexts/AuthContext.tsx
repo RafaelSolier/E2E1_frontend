@@ -21,7 +21,7 @@ async function loginHandler(
 	setSession: (value: string) => void,
 ) {
 	const response = await login(loginRequest);
-	setSession(response.data.token);
+	setSession(response.token);
 }
 
 async function signupHandler(
@@ -29,7 +29,7 @@ async function signupHandler(
 	setSession: (value: string) => void,
 ) {
 	const response = await register(signupRequest);
-	setSession(response.data.token);
+	setSession(response.token);
 }
 
 export function AuthProvider(props: { children: ReactNode }) {
