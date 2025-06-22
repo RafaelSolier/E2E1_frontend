@@ -34,17 +34,19 @@ export default function RegisterVehicle(props: RegisterVehicleProps) {
 		setError("");
 
 		// Crear el objeto de registro con toda la información
-		const updatedFormData: RegisterRequest & { isDriver?: boolean; category?: string; vehicle?: VehicleResponse } = {
-			...props.formData,
-			isDriver: true,
+		const registerData: RegisterRequest = {
+			firstName: props.formData.firstName,
+			lastName: props.formData.lastName,
+			email: props.formData.email,
+			password: props.formData.password,
+			phone: props.formData.phone,
+			isDriver: true, // Importante: enviar como número
 			category: category,
 			vehicle: vehicleData
 		};
 
 		try {
-			// Eliminar campos que no son parte del DTO del backend
-			const { isDriver, ...registerData } = updatedFormData;
-			await register(registerData as any);
+			await register(registerData);
 			navigate("/dashboard");
 		} catch (error: any) {
 			setError(error.response?.data?.message || "Error al registrar conductor");
