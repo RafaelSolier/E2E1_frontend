@@ -58,14 +58,22 @@ export default function EditProfilePage() {
 	}
 
 	async function fetchDeleteUser() {
-		if (!userId) return;
-		
 		try {
 			if (getRoleBasedOnToken() === "ROLE_DRIVER") {
-				await deleteDriver(userId);
+				// if (!userId) {
+				const driver = await getDriver();
+					console.error("Driver ID found: " + driver.id);
+				await deleteDriver(driver.id);
+					return;
+				// }
 			} else if (getRoleBasedOnToken() === "ROLE_PASSENGER") {
-				await deletePassenger(userId);
-			}
+				const passenger = await getPassenger();
+				// if (!userId) {
+					console.log("Passenger ID found: " + passenger.id);
+					await deletePassenger(passenger.id);
+					return;
+				}
+			
 			logout();
 			navigate("/auth/login");
 		} catch (error) {
@@ -74,27 +82,30 @@ export default function EditProfilePage() {
 	}
 
 	async function fetchUpdateUser() {
-		if (!userId) return;
-
 		try {
 			if (getRoleBasedOnToken() === "ROLE_DRIVER") {
-				// Fix the typo in DriverPatchRequest interface (firtsName -> firstName)
+				if (!userId) {
+					console.error("Driver ID not found");
+					return;
+				}
+				
 				await updateDriverInfo(userId, {
-					firtsName: formData.firstName, // Note the typo in the interface
+					firstName: formData.firstName, 
 					lastName: formData.lastName,
 					phoneNumber: formData.phoneNumber
 				});
 			} else if (getRoleBasedOnToken() === "ROLE_PASSENGER") {
-				await updatePassenger(userId, formData);
+				// Para passenger, no necesitamos ID ya que usa /passenger/me
+				await updatePassenger(formData);
 			}
 		} catch (error) {
 			console.error("Error updating user:", error);
 		}
 	}
 
-	function handleSubmit(e: FormEvent<HTMLFormElement>) {
+	async function handleSubmit(e: FormEvent<HTMLFormElement>) {
 		e.preventDefault();
-		fetchUpdateUser();
+		await fetchUpdateUser();
 		navigate("/dashboard");
 	}
 

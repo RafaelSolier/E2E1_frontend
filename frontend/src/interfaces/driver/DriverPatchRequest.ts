@@ -1,5 +1,5 @@
 export interface DriverPatchRequest {
-    firtsName: string;
+    firstName: string;
     lastName: string;
     phoneNumber: string;
 }
