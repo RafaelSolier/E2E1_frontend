@@ -38,6 +38,7 @@ export default function EditProfilePage() {
 			} else if (role === "ROLE_PASSENGER") {
 				const passenger = await getPassenger();
 				// Note: Passenger doesn't have ID in response, handle accordingly
+				setUserId(passenger.id);  
 				setFormData({
 					firstName: passenger.firstName,
 					lastName: passenger.lastName,
@@ -59,7 +60,6 @@ export default function EditProfilePage() {
 
 	async function fetchDeleteUser() {
 		if (!userId) return;
-		
 		try {
 			if (getRoleBasedOnToken() === "ROLE_DRIVER") {
 				await deleteDriver(userId);
@@ -74,29 +74,32 @@ export default function EditProfilePage() {
 	}
 
 	async function fetchUpdateUser() {
-		if (!userId) return;
-
 		try {
 			if (getRoleBasedOnToken() === "ROLE_DRIVER") {
-				// Fix the typo in DriverPatchRequest interface (firtsName -> firstName)
+			if (!userId) return;
 				await updateDriverInfo(userId, {
-					firtsName: formData.firstName, // Note the typo in the interface
+					firstName: formData.firstName, // Typo matches the interface
 					lastName: formData.lastName,
 					phoneNumber: formData.phoneNumber
 				});
-			} else if (getRoleBasedOnToken() === "ROLE_PASSENGER") {
-				await updatePassenger(userId, formData);
+			} else {
+				if (!userId) return;               // ahora sí existe
+				await updatePassenger({
+				firstName: formData.firstName,
+				lastName:  formData.lastName,
+				phoneNumber: formData.phoneNumber
+				});
 			}
 		} catch (error) {
 			console.error("Error updating user:", error);
 		}
 	}
 
-	function handleSubmit(e: FormEvent<HTMLFormElement>) {
-		e.preventDefault();
-		fetchUpdateUser();
-		navigate("/dashboard");
-	}
+	async function handleSubmit(e: FormEvent<HTMLFormElement>) {
+			e.preventDefault();
+			await fetchUpdateUser();
+			navigate("/dashboard");
+		}
 
 	return (
 		<main className="p-10 max-w-4xl mx-auto">
