@@ -6,8 +6,8 @@ export default function LoginPage() {
 	return (
 		<main className="px-10">
 			<section className="flex justify-center items-center py-4">
-				<Button message="Iniciar Sesión" />
-				<Button message="Registrarse" />
+				<Button message="Iniciar Sesión" to="/auth/login"/>
+				<Button message="Registrarse" to="/auth/register" />
 			</section>
 
 			<article className="flex justify-between">

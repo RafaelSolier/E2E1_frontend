@@ -3,12 +3,17 @@ import RegisterForm from "@components/RegisterForm";
 import RegisterVehicle from "@components/RegisterVehicle";
 import img6 from "../assets/Img6.png";
 
+import { useState } from "react";
+
 export default function RegisterPage() {
+	const [vehicleRegister, setVehicleRegister] = useState(false);
+	const [formData, setFormData] = useState<any>({});
+
 	return (
 		<main className="px-10">
 			<section className="flex justify-center items-center py-4">
-				<Button message="Iniciar Sesión" />
-				<Button message="Registrarse" />
+				<Button message="Iniciar Sesión" to="/auth/login"/>
+				<Button message="Registrarse" to="/auth/register" />
 			</section>
 
 			<article className="flex justify-between">

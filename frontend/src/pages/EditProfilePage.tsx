@@ -1,35 +1,94 @@
 import Profile from "@components/Profile";
-import { ChangeEvent, FormEvent } from "react";
+import { ChangeEvent, FormEvent, useState, useEffect } from "react";
 import { getRoleBasedOnToken } from "src/utils/getRoleBasedOnToken";
+import { useNavigate } from "react-router-dom";
+import { getDriver } from "@services/driver/getDriver";
+import { getPassenger } from "@services/passenger/getPassenger";
+import { updateDriverInfo } from "@services/driver/updateDriverInfo";
+import { updatePassenger } from "@services/passenger/updatePassenger";
+import { deleteDriver } from "@services/driver/deleteDriver";
+import { deletePassenger } from "@services/passenger/deletePassenger";
+import { useAuthContext } from "@contexts/AuthContext";
 
 export default function EditProfilePage() {
-	function handleChange(e: ChangeEvent<HTMLInputElement>) {}
+	const navigate = useNavigate();
+	const { logout } = useAuthContext();
+	const [userId, setUserId] = useState<number | null>(null);
+	const [formData, setFormData] = useState({
+		firstName: "",
+		lastName: "",
+		phoneNumber: ""
+	});
+
+	useEffect(() => {
+		fetchUserData();
+	}, []);
+
+	async function fetchUserData() {
+		try {
+			const role = getRoleBasedOnToken();
+			if (role === "ROLE_DRIVER") {
+				const driver = await getDriver();
+				setUserId(driver.id);
+				setFormData({
+					firstName: driver.firstName,
+					lastName: driver.lastName,
+					phoneNumber: driver.phoneNumber
+				});
+			} else if (role === "ROLE_PASSENGER") {
+				const passenger = await getPassenger();
+				// Note: Passenger doesn't have ID in response, handle accordingly
+				setFormData({
+					firstName: passenger.firstName,
+					lastName: passenger.lastName,
+					phoneNumber: passenger.phoneNumber
+				});
+			}
+		} catch (error) {
+			console.error("Error fetching user data:", error);
+		}
+	}
+
+	function handleChange(e: ChangeEvent<HTMLInputElement>) {
+		const { name, value } = e.target;
+		setFormData(prev => ({
+			...prev,
+			[name]: value
+		}));
+	}
 
 	async function fetchDeleteUser() {
-		if (getRoleBasedOnToken() === "ROLE_DRIVER") {
-			try {
-			} catch (error) {}
-		} else if (getRoleBasedOnToken() === "ROLE_PASSENGER") {
-			try {
-			} catch (error) {}
-		} else {
-			console.error("Error: No role found");
+		if (!userId) return;
+		
+		try {
+			if (getRoleBasedOnToken() === "ROLE_DRIVER") {
+				await deleteDriver(userId);
+			} else if (getRoleBasedOnToken() === "ROLE_PASSENGER") {
+				await deletePassenger(userId);
+			}
+			logout();
+			navigate("/auth/login");
+		} catch (error) {
+			console.error("Error deleting user:", error);
 		}
 	}
 
 	async function fetchUpdateUser() {
-		if (getRoleBasedOnToken() === "ROLE_DRIVER") {
-			try {
-			} catch (error) {
-				console.error("Error:", error);
+		if (!userId) return;
+
+		try {
+			if (getRoleBasedOnToken() === "ROLE_DRIVER") {
+				// Fix the typo in DriverPatchRequest interface (firtsName -> firstName)
+				await updateDriverInfo(userId, {
+					firtsName: formData.firstName, // Note the typo in the interface
+					lastName: formData.lastName,
+					phoneNumber: formData.phoneNumber
+				});
+			} else if (getRoleBasedOnToken() === "ROLE_PASSENGER") {
+				await updatePassenger(userId, formData);
 			}
-		} else if (getRoleBasedOnToken() === "ROLE_PASSENGER") {
-			try {
-			} catch (error) {
-				console.error("Error:", error);
-			}
-		} else {
-			console.error("Error: No role found");
+		} catch (error) {
+			console.error("Error updating user:", error);
 		}
 	}
 
@@ -40,44 +99,49 @@ export default function EditProfilePage() {
 	}
 
 	return (
-		<main>
-			<article>
-				<h1>Editar Perfil</h1>
-				<form onSubmit={}>
+		<main className="p-10 max-w-4xl mx-auto">
+			<article className="bg-white p-8 rounded-lg shadow-lg mb-6">
+				<h1 className="text-3xl font-bold mb-6">Editar Perfil</h1>
+				<form onSubmit={handleSubmit} className="space-y-4">
 					<div>
-						<label htmlFor="firstName">Nombres</label>
+						<label htmlFor="firstName" className="block text-sm font-medium mb-2">Nombres</label>
 						<input
 							type="text"
 							name="firstName"
 							id="firstName"
 							value={formData.firstName}
-							onChange={}
+							onChange={handleChange}
+							className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
 							required
 						/>
 					</div>
 					<div>
-						<label htmlFor="lastName">Apellidos</label>
+						<label htmlFor="lastName" className="block text-sm font-medium mb-2">Apellidos</label>
 						<input
 							type="text"
 							name="lastName"
 							id="lastName"
 							value={formData.lastName}
-							onChange={}
+							onChange={handleChange}
+							className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+							required
 						/>
 					</div>
 					<div>
-						<label htmlFor="phoneNumber">Celular</label>
+						<label htmlFor="phoneNumber" className="block text-sm font-medium mb-2">Celular</label>
 						<input
-							type="number"
+							type="text"
 							name="phoneNumber"
 							id="phoneNumber"
 							value={formData.phoneNumber}
-							onChange={}
+							onChange={handleChange}
+							className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+							required
 						/>
 					</div>
 					<button
 						id="updateSubmit"
-						className="bg-primary text-white font-bold mx-6 py-2 px-4 rounded-full cursor-pointer"
+						className="w-full bg-primary text-white font-bold py-3 px-4 rounded-full hover:bg-primary-dark transition-colors"
 						type="submit"
 					>
 						Actualizar
@@ -85,9 +149,15 @@ export default function EditProfilePage() {
 				</form>
 			</article>
 
-			<Profile setUserId={setUserId} />
+			<div className="bg-white p-8 rounded-lg shadow-lg mb-6">
+				<Profile setUserId={setUserId} />
+			</div>
 
-			<button id="deleteUser" onClick={}>
+			<button 
+				id="deleteUser" 
+				onClick={fetchDeleteUser}
+				className="w-full bg-red-500 text-white font-bold py-3 px-4 rounded-full hover:bg-red-600 transition-colors"
+			>
 				Eliminar cuenta
 			</button>
 		</main>
