@@ -54,11 +54,11 @@ export default function Profile(props: ProfileProps) {
 				</div>
 				<ul className="w-3/5 ml-6 space-y-2">
 					<li id="profileNames">
-						<b>Nombre:</b> {profileInfo.firstName} {profileInfo.lastName}
+						{profileInfo.firstName} {profileInfo.lastName}
 					</li>
 					{isDriver && (profileInfo as DriverResponse).email && (
 						<li id="profileEmail">
-							<b>Email:</b> {(profileInfo as DriverResponse).email}
+							{(profileInfo as DriverResponse).email}
 						</li>
 					)}
 					<li id="profilePhone">

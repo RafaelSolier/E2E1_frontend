@@ -6,6 +6,7 @@ export default function Navbar() {
 	const { logout } = useAuthContext();
 
 	function handleLogout() {
+		localStorage.removeItem("token");
 		logout();
 		navigate("/auth/login");
 	}
