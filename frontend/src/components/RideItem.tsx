@@ -55,7 +55,7 @@ export default function RideItem(props: RideItemProps) {
 				<AiFillDollarCircle className="text-yellow-500 mr-2" />
 				<b className="mr-2">Precio:</b>
 				<p id="price" className="text-gray-700">
-					{props.data.price.toFixed(2)}
+					{props.data.price.toFixed(1)}
 				</p>
 			</div>
 		</section>

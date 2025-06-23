@@ -3,6 +3,7 @@ import { PassengerPatchRequest } from "@interfaces/passenger/PassengerPatchReque
 import { PassengerResponse } from "@interfaces/passenger/PassengerResponse";
 
 export async function updatePassenger(
+  //id: number,
   data: PassengerPatchRequest
 ): Promise<PassengerResponse> {
   const Apis = await Api.getInstance();

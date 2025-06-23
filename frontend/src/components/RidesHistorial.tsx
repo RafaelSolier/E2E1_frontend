@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import RideItem from "./RideItem";
 import { RideByUserResponse } from "@interfaces/ride/RideByUserResponse";
 import { getRidesByUser } from "@services/getRidesByUser";
-import { PaginatedResponse } from "@interfaces/pagination/PaginatedResponse";
+//import { PaginatedResponse } from "@interfaces/pagination/PaginatedResponse";
 
 export default function RidesHistorial() {
 	const [rides, setRides] = useState<RideByUserResponse[]>([]);

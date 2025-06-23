@@ -54,19 +54,19 @@ export default function Profile(props: ProfileProps) {
 				</div>
 				<ul className="w-3/5 ml-6 space-y-2">
 					<li id="profileNames">
-						<b>{profileInfo.firstName} {profileInfo.lastName}</b>
+						{profileInfo.firstName} {profileInfo.lastName}
 					</li>
-					{isDriver && (profileInfo as DriverResponse).email && (
-						<li id="profileEmail">
-							<b>Email:</b> {(profileInfo as DriverResponse).email}
-						</li>
-					)}
+					
+					<li id="profileEmail">
+						{(profileInfo as DriverResponse).email}
+					</li>
+			
 					<li id="profilePhone">
-						<b>Teléfono:</b> {profileInfo.phoneNumber}
+						{profileInfo.phoneNumber}
 					</li>
 					{isDriver && (
 						<li id="profileTrips">
-							<b>N° viajes:</b> {(profileInfo as DriverResponse).trips}
+						{(profileInfo as DriverResponse).trips}
 						</li>
 					)}
 					<li>

@@ -38,8 +38,8 @@ export default function RegisterForm(props: RegisterFormProps) {
 		} else {
 			// Si es pasajero, registrar directamente
 			try {
-				const { isDriver, ...registerData } = props.formData;
-				await register(registerData);
+				await register(props.formData);
+				// Asumimos que el registro fue exitoso si no lanza error
 				navigate("/dashboard");
 			} catch (error: any) {
 				console.error("Error al registrar:", error);

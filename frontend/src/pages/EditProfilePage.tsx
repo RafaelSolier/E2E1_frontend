@@ -38,6 +38,7 @@ export default function EditProfilePage() {
 			} else if (role === "ROLE_PASSENGER") {
 				const passenger = await getPassenger();
 				// Note: Passenger doesn't have ID in response, handle accordingly
+				setUserId(passenger.id);  
 				setFormData({
 					firstName: passenger.firstName,
 					lastName: passenger.lastName,
@@ -58,22 +59,14 @@ export default function EditProfilePage() {
 	}
 
 	async function fetchDeleteUser() {
+		if (!userId) return;
 		try {
 			if (getRoleBasedOnToken() === "ROLE_DRIVER") {
-				// if (!userId) {
-				const driver = await getDriver();
-					console.error("Driver ID found: " + driver.id);
-				await deleteDriver(driver.id);
-					return;
-				// }
+				await deleteDriver(userId);
 			} else if (getRoleBasedOnToken() === "ROLE_PASSENGER") {
-				const passenger = await getPassenger();
-				// if (!userId) {
-					console.log("Passenger ID found: " + passenger.id);
-					await deletePassenger(passenger.id);
-					return;
-				}
-			
+				await deletePassenger(userId);
+			}
+			localStorage.removeItem("token");
 			logout();
 			navigate("/auth/login");
 		} catch (error) {
@@ -84,19 +77,19 @@ export default function EditProfilePage() {
 	async function fetchUpdateUser() {
 		try {
 			if (getRoleBasedOnToken() === "ROLE_DRIVER") {
-				if (!userId) {
-					console.error("Driver ID not found");
-					return;
-				}
-				
+			if (!userId) return;
 				await updateDriverInfo(userId, {
-					firstName: formData.firstName, 
+					firstName: formData.firstName, // Typo matches the interface
 					lastName: formData.lastName,
 					phoneNumber: formData.phoneNumber
 				});
-			} else if (getRoleBasedOnToken() === "ROLE_PASSENGER") {
-				// Para passenger, no necesitamos ID ya que usa /passenger/me
-				await updatePassenger(formData);
+			} else {
+				if (!userId) return;               // ahora sí existe
+				await updatePassenger({
+				firstName: formData.firstName,
+				lastName:  formData.lastName,
+				phoneNumber: formData.phoneNumber
+				});
 			}
 		} catch (error) {
 			console.error("Error updating user:", error);
@@ -104,10 +97,10 @@ export default function EditProfilePage() {
 	}
 
 	async function handleSubmit(e: FormEvent<HTMLFormElement>) {
-		e.preventDefault();
-		await fetchUpdateUser();
-		navigate("/dashboard");
-	}
+			e.preventDefault();
+			await fetchUpdateUser();
+			navigate("/dashboard");
+		}
 
 	return (
 		<main className="p-10 max-w-4xl mx-auto">
