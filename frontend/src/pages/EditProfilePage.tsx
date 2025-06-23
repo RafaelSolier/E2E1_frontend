@@ -66,6 +66,7 @@ export default function EditProfilePage() {
 			} else if (getRoleBasedOnToken() === "ROLE_PASSENGER") {
 				await deletePassenger(userId);
 			}
+			localStorage.removeItem("token");
 			logout();
 			navigate("/auth/login");
 		} catch (error) {
