@@ -136,7 +136,7 @@ export default function RegisterVehicle(props: RegisterVehicleProps) {
 						type="number"
 						name="capacity"
 						id="capacity"
-						value={vehicleData.capacity}
+						// value={vehicleData.capacity}
 						onChange={handleChange}
 						min="1"
 						max="8"
