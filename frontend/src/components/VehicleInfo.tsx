@@ -33,7 +33,7 @@ export default function VehicleInfo() {
 						</li>
 						<li id="driverCategory">
 							<b>Categoría: </b>
-							Uber{profileInfo.category}
+							{profileInfo.category}
 						</li>
 						<li id="licenseNumber">
 							<b>Placa: </b>
@@ -45,7 +45,7 @@ export default function VehicleInfo() {
 						</li>
 						<li id="capacityNumber">
 							<b>Capacidad: </b>
-							{profileInfo.vehicle.capacity} pasajeros
+							{profileInfo.vehicle.capacity}
 						</li>
 					</ul>
 				) : (

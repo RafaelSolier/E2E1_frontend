@@ -75,9 +75,9 @@ export default function RegisterVehicle(props: RegisterVehicleProps) {
 						className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
 						required
 					>
-						<option value="X">UberX</option>
-						<option value="XL">UberXL</option>
-						<option value="BLACK">UberBlack</option>
+						<option value="X">X</option>
+						<option value="XL">XL</option>
+						<option value="BLACK">BLACK</option>
 					</select>
 				</div>
 				<div>
@@ -122,7 +122,7 @@ export default function RegisterVehicle(props: RegisterVehicleProps) {
 						type="number"
 						name="fabricationYear"
 						id="fabricationYear"
-						value={vehicleData.fabricationYear}
+						// value={vehicleData.fabricationYear}
 						onChange={handleChange}
 						min="1990"
 						max={new Date().getFullYear()}

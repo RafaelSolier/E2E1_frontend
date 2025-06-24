@@ -8,6 +8,6 @@ export function getRoleBasedOnToken() {
 	const token = localStorage.getItem("token");
 	if (!token) throw new Error("Token not found");
 	const decodedToken = jwtDecode<DecodedToken>(token);
-	console.log("Decoded Token:", decodedToken);
+	// console.log("Decoded Token:", decodedToken);
 	return decodedToken.role;
 }
