@@ -393,14 +393,14 @@ SELECT pg_catalog.setval('public.ride_id_seq', 2, true);
 -- Name: users_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.users_seq', 1, false);
+SELECT pg_catalog.setval('public.users_seq', 1, true);
 
 
 --
 -- Name: vehicle_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.vehicle_id_seq', 1, false);
+SELECT pg_catalog.setval('public.vehicle_id_seq', 1, true);
 
 
 --
